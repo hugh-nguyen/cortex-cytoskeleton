@@ -1,0 +1,19 @@
+name: "Get Latest Tag"
+description: "Fetch the latest tag or default to 0.0.0"
+outputs:
+  latest_tag:
+    description: "The latest tag found"
+    value: ${{ steps.get_tag.outputs.latest_tag }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Get Latest Tag
+      id: get_tag
+      run: |
+        latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
+        echo "latest_tag=$latest_tag" >> "$GITHUB_OUTPUT"
+      shell: bash
